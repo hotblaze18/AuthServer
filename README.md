@@ -17,6 +17,16 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
+## Migrations
+
+```bash
+# autogenerate migrations
+$ yarn typeorm migration:generate -n {migration name}
+
+# runs all pending migrations.
+$ yarn typeorm migration:run
+```
+
 ## Test
 
 ```bash
