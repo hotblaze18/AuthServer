@@ -5,10 +5,10 @@ module.exports = {
     "username": "postgres",
     "password": "mysecretpassword",
     "database": "authserver",
-    "entities": ["dist/**/*.entity.js", "src/entities/*.entity.ts"],
+    "entities": ["dist/**/*.entity.js"],
     "synchronize": true,
     "migrations": [
-        "src/migrations/**/*.ts"
+        "dist/migrations/**/*.js"
       ],
       "cli": {
         "migrationsDir": "src/migrations"
