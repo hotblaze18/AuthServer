@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { hash } from 'bcrypt';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import e = require('express');
 
 /**
  * // TODO(m-nikhil): update lastUpdatedBy to actual user, after login is done.
@@ -30,7 +29,7 @@ export class UserService {
       await hash(createUserRequest.password, 10),
       'curr_user',
     );
-    return this.userRepository.save(user).catch(e => {
+    return this.userRepository.save(user).catch(() => {
       throw new BadRequestException('User already exist');
     });
   }

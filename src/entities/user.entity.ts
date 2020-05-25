@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Index,
-  BeforeInsert,
 } from 'typeorm';
 
 /**
