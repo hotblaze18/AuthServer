@@ -1,8 +1,33 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import {IsEmail} from "class-validator";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  Index,
+  BeforeInsert,
+} from 'typeorm';
 
+/**
+ * Represents the users who access the application
+ */
 @Entity()
 export class User {
+  constructor(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    lastUpdatedBy: string,
+  ) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.password = password;
+    this.lastUpdatedBy = lastUpdatedBy;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -10,12 +35,24 @@ export class User {
   firstName: string;
 
   @Column()
-  @IsEmail()
+  lastName: string;
+
+  @Column()
+  @Index({ unique: true })
   email: string;
 
   @Column()
-  lastName: string;
+  password: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column()
+  lastUpdatedBy: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
 }

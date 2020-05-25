@@ -27,6 +27,16 @@ $ yarn typeorm migration:generate -n {migration name}
 $ yarn typeorm migration:run
 ```
 
+## Linting & Formatting
+
+```bash
+# lint
+$ yarn lint
+
+# format
+$ yarn format
+```
+
 ## Test
 
 ```bash
