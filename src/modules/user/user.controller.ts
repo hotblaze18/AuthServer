@@ -6,6 +6,7 @@ import {
   Put,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserRequest } from './dto/request/createUser.dto';
 import { UserService } from './user.service';
@@ -13,6 +14,7 @@ import { UserResponse } from './dto/response/user.dto';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ErrorResponse } from 'src/common/dto/error.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('user')
 @ApiResponse({
@@ -21,6 +23,7 @@ import { ErrorResponse } from 'src/common/dto/error.dto';
   description: 'Entity not found.',
 })
 @Controller('user')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

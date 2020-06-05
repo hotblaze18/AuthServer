@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Transport } from '@nestjs/microservices';
 import { EntityNotFoundExceptionFilter } from './common/exceptions/entityNotFound.filter';
 import { ValidationPipe } from '@nestjs/common';
 
@@ -34,6 +35,14 @@ async function bootstrap() {
     }),
   );
 
+  /**
+   * Microservice configuration
+   */
+  app.connectMicroservice({
+    transport: Transport.TCP,
+  });
+
+  await app.startAllMicroservicesAsync();
   await app.listen(3000);
 }
 bootstrap();

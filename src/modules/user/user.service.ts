@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUserRequest } from './dto/request/createUser.dto';
 import { User } from '../../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindConditions } from 'typeorm';
 import { hash } from 'bcrypt';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -41,6 +41,9 @@ export class UserService {
     return this.userRepository.findOneOrFail(id);
   }
 
+  async getUserByEmail(query: FindConditions<User>): Promise<User> {
+    return this.userRepository.findOneOrFail(query);
+  }
   /**
    * update user by id and if deletedAt is null (to ensure user is not soft deleted),
    * else throw `EntityNotFoundError`.
