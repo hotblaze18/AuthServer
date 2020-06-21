@@ -37,7 +37,7 @@ export class UserService {
   /**
    * get user by id or throw EntityNotFoundError
    */
-  async getUserById(id: number): Promise<User> {
+  async getUserById(id: string): Promise<User> {
     return this.userRepository.findOneOrFail(id);
   }
 
@@ -48,7 +48,7 @@ export class UserService {
    * Update lastUpdatedBy column.
    */
   async updateUser(
-    id: number,
+    id: string,
     updateUserRequest: UpdateUserRequest,
   ): Promise<User> {
     const updateResult = await this.userRepository
@@ -73,7 +73,7 @@ export class UserService {
    *
    * Update lastUpdatedBy column
    */
-  async deleteUser(id: number): Promise<number> {
+  async deleteUser(id: string): Promise<string> {
     const updateResult = await this.userRepository
       .createQueryBuilder()
       .update(User)

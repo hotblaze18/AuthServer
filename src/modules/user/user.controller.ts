@@ -54,7 +54,7 @@ export class UserController {
    * get a user by id
    */
   @Get(':id')
-  async find(@Param('id') id: number): Promise<UserResponse> {
+  async find(@Param('id') id: string): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
       await this.userService.getUserById(id),
     );
@@ -66,7 +66,7 @@ export class UserController {
    */
   @Put(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateUserRequest: UpdateUserRequest,
   ): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
@@ -79,7 +79,7 @@ export class UserController {
    * delete a user by id
    */
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<number> {
+  async delete(@Param('id') id: string): Promise<string> {
     return this.userService.deleteUser(id);
   }
 }
