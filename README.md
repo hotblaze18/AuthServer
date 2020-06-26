@@ -17,6 +17,13 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
+## Dev Database setup (require docker)
+
+```bash
+$ yarn db:dev
+```
+
+
 ## Migrations
 
 ```bash
