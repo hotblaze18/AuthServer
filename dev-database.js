@@ -14,7 +14,7 @@ docker.createContainer({
     ExposedPorts: {
         "5432/tcp": {}
     },
-    name: "postgres-jest-unit-test"
+    name: "postgres-dev"
     }).then(function(container) {
       return container.start();
     })
