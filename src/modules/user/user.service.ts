@@ -19,7 +19,10 @@ export class UserService {
   /**
    * create new user if password and confirm password match
    */
-  async createUser(transactionRunner: QueryRunner, createUserRequest: CreateUserRequest): Promise<User> {
+  async createUser(
+    transactionRunner: QueryRunner,
+    createUserRequest: CreateUserRequest,
+  ): Promise<User> {
     const user = new User(
       createUserRequest.firstName,
       createUserRequest.lastName,
@@ -36,7 +39,7 @@ export class UserService {
    * get user by id or throw EntityNotFoundError
    */
   async getUserById(transactionRunner: QueryRunner, id: number): Promise<User> {
-    return transactionRunner.manager.findOneOrFail(User,id);
+    return transactionRunner.manager.findOneOrFail(User, id);
   }
 
   /**
@@ -46,7 +49,7 @@ export class UserService {
    * Update lastUpdatedBy column.
    */
   async updateUser(
-    transactionRunner: QueryRunner, 
+    transactionRunner: QueryRunner,
     id: number,
     updateUserRequest: UpdateUserRequest,
   ): Promise<User> {
@@ -63,7 +66,7 @@ export class UserService {
       throw new EntityNotFoundError(User, id);
     }
 
-    return  transactionRunner.manager.findOneOrFail(User,id);
+    return transactionRunner.manager.findOneOrFail(User, id);
   }
 
   /**
@@ -72,7 +75,10 @@ export class UserService {
    *
    * Update lastUpdatedBy column
    */
-  async deleteUser(transactionRunner: QueryRunner, id: number): Promise<number> {
+  async deleteUser(
+    transactionRunner: QueryRunner,
+    id: number,
+  ): Promise<number> {
     const updateResult = await transactionRunner.manager
       .createQueryBuilder()
       .update(User)
@@ -88,14 +94,14 @@ export class UserService {
       throw new EntityNotFoundError(User, id);
     }
 
-    transactionRunner.manager.softDelete(User,id);
+    transactionRunner.manager.softDelete(User, id);
     return id;
   }
 
   /**
    * query user table
    */
-  async queryUser(transactionRunner: QueryRunner, ): Promise<User[]> {
+  async queryUser(transactionRunner: QueryRunner): Promise<User[]> {
     return transactionRunner.manager.find(User);
   }
 }

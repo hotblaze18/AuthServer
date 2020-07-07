@@ -24,8 +24,10 @@ import { atomic } from 'src/common/database/transaction';
   description: 'Entity not found.',
 })
 export class UserController {
-  constructor(private readonly userService: UserService,
-    private connection: Connection) {}
+  constructor(
+    private readonly userService: UserService,
+    private connection: Connection,
+  ) {}
 
   /**
    * create a new user
@@ -33,10 +35,14 @@ export class UserController {
 
   @Post()
   async create(
-    @Body() createUserRequest: CreateUserRequest
+    @Body() createUserRequest: CreateUserRequest,
   ): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
-      await atomic(this.connection,this.userService.createUser,createUserRequest)
+      await atomic(
+        this.connection,
+        this.userService.createUser,
+        createUserRequest,
+      ),
     );
     return userDto;
   }
@@ -49,7 +55,7 @@ export class UserController {
   @Get()
   async query(): Promise<UserResponse[]> {
     const userResponseList = UserResponse.fromUserEntityList(
-      await atomic(this.connection,this.userService.queryUser)
+      await atomic(this.connection, this.userService.queryUser),
     );
     return userResponseList;
   }
@@ -60,7 +66,7 @@ export class UserController {
   @Get(':id')
   async find(@Param('id') id: number): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
-      await atomic(this.connection,this.userService.getUserById,id)
+      await atomic(this.connection, this.userService.getUserById, id),
     );
     return userDto;
   }
@@ -74,7 +80,12 @@ export class UserController {
     @Body() updateUserRequest: UpdateUserRequest,
   ): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
-      await atomic(this.connection,this.userService.updateUser,id, updateUserRequest)
+      await atomic(
+        this.connection,
+        this.userService.updateUser,
+        id,
+        updateUserRequest,
+      ),
     );
     return userDto;
   }
@@ -84,6 +95,6 @@ export class UserController {
    */
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<number> {
-    return atomic(this.connection,this.userService.deleteUser,id)
+    return atomic(this.connection, this.userService.deleteUser, id);
   }
 }

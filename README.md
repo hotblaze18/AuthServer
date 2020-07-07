@@ -17,12 +17,18 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
-## Dev Database setup (require docker)
+## Dev database setup (require docker)
 
 ```bash
+# start development database
 $ yarn db:dev
+
+# start unit test database
+$ yarn db:test
 ```
 
+# Vscode plugin for unit test 
+Install [Jest Runner](https://marketplace.visualstudio.com/items?itemName=firsttris.vscode-jest-runner) plugin.
 
 ## Migrations
 
