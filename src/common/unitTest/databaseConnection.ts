@@ -4,9 +4,8 @@ import {
   QueryRunner,
   Connection,
 } from 'typeorm';
-import { async } from 'rxjs/internal/scheduler/async';
 
-export async function setupConnection(entities) {
+export async function setupConnection(entities): Promise<QueryRunner> {
   await createConnection({
     type: 'postgres',
     synchronize: true,
@@ -15,17 +14,16 @@ export async function setupConnection(entities) {
     entities: entities,
   });
 
-  const connection: Connection = getConnection();
-  const queryRunner: QueryRunner = connection.createQueryRunner();
+  const connection: Connection = await getConnection('default');
+  const queryRunner: QueryRunner = await connection.createQueryRunner();
 
   await queryRunner.connect();
-  await queryRunner.startTransaction();
 
   return queryRunner;
 }
 
 export async function teardownConnection(queryRunner: QueryRunner) {
-  await queryRunner.rollbackTransaction();
-  let connection: Connection = getConnection();
-  return connection.close();
+  await queryRunner.release();
+  const connection: Connection = getConnection();
+  await connection.close();
 }
