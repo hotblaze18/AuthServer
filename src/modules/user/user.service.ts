@@ -1,8 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUserRequest } from './dto/request/createUser.dto';
 import { User } from '../../entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryRunner } from 'typeorm';
+import { QueryRunner } from 'typeorm';
 import { hash } from 'bcrypt';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -14,8 +13,6 @@ import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 
 @Injectable()
 export class UserService {
-  constructor() {}
-
   /**
    * create new user if password and confirm password match
    */
