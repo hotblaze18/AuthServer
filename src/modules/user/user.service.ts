@@ -1,8 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateUserRequest } from './dto/request/createUser.dto';
 import { User } from '../../entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner } from 'typeorm';
 import { hash } from 'bcrypt';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
@@ -14,14 +13,13 @@ import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
-
   /**
    * create new user if password and confirm password match
    */
-  async createUser(createUserRequest: CreateUserRequest): Promise<User> {
+  async createUser(
+    transactionRunner: QueryRunner,
+    createUserRequest: CreateUserRequest,
+  ): Promise<User> {
     const user = new User(
       createUserRequest.firstName,
       createUserRequest.lastName,
@@ -29,7 +27,7 @@ export class UserService {
       await hash(createUserRequest.password, 10),
       'curr_user',
     );
-    return this.userRepository.save(user).catch(() => {
+    return transactionRunner.manager.save(user).catch(() => {
       throw new BadRequestException('User already exist');
     });
   }
@@ -37,8 +35,8 @@ export class UserService {
   /**
    * get user by id or throw EntityNotFoundError
    */
-  async getUserById(id: string): Promise<User> {
-    return this.userRepository.findOneOrFail(id);
+  async getUserById(transactionRunner: QueryRunner, id: number): Promise<User> {
+    return transactionRunner.manager.findOneOrFail(User, id);
   }
 
   /**
@@ -48,10 +46,11 @@ export class UserService {
    * Update lastUpdatedBy column.
    */
   async updateUser(
-    id: string,
+    transactionRunner: QueryRunner,
+    id: number,
     updateUserRequest: UpdateUserRequest,
   ): Promise<User> {
-    const updateResult = await this.userRepository
+    const updateResult = await transactionRunner.manager
       .createQueryBuilder()
       .update(User)
       .set(updateUserRequest)
@@ -64,7 +63,7 @@ export class UserService {
       throw new EntityNotFoundError(User, id);
     }
 
-    return this.userRepository.findOneOrFail(id);
+    return transactionRunner.manager.findOneOrFail(User, id);
   }
 
   /**
@@ -73,8 +72,11 @@ export class UserService {
    *
    * Update lastUpdatedBy column
    */
-  async deleteUser(id: string): Promise<string> {
-    const updateResult = await this.userRepository
+  async deleteUser(
+    transactionRunner: QueryRunner,
+    id: number,
+  ): Promise<number> {
+    const updateResult = await transactionRunner.manager
       .createQueryBuilder()
       .update(User)
       .set({
@@ -89,14 +91,14 @@ export class UserService {
       throw new EntityNotFoundError(User, id);
     }
 
-    this.userRepository.softDelete(id);
+    transactionRunner.manager.softDelete(User, id);
     return id;
   }
 
   /**
    * query user table
    */
-  async queryUser(): Promise<User[]> {
-    return this.userRepository.find();
+  async queryUser(transactionRunner: QueryRunner): Promise<User[]> {
+    return transactionRunner.manager.find(User);
   }
 }

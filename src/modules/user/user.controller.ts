@@ -13,26 +13,36 @@ import { UserResponse } from './dto/response/user.dto';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ErrorResponse } from 'src/common/dto/error.dto';
+import { Connection } from 'typeorm';
+import { atomic } from 'src/common/database/transaction';
 
+@Controller('user')
 @ApiTags('user')
 @ApiResponse({
   status: 404,
   type: ErrorResponse,
   description: 'Entity not found.',
 })
-@Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private connection: Connection,
+  ) {}
 
   /**
    * create a new user
    */
+
   @Post()
   async create(
     @Body() createUserRequest: CreateUserRequest,
   ): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
-      await this.userService.createUser(createUserRequest),
+      await atomic(
+        this.connection,
+        this.userService.createUser,
+        createUserRequest,
+      ),
     );
     return userDto;
   }
@@ -45,7 +55,7 @@ export class UserController {
   @Get()
   async query(): Promise<UserResponse[]> {
     const userResponseList = UserResponse.fromUserEntityList(
-      await this.userService.queryUser(),
+      await atomic(this.connection, this.userService.queryUser),
     );
     return userResponseList;
   }
@@ -56,7 +66,7 @@ export class UserController {
   @Get(':id')
   async find(@Param('id') id: string): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
-      await this.userService.getUserById(id),
+      await atomic(this.connection, this.userService.getUserById, id),
     );
     return userDto;
   }
@@ -70,7 +80,12 @@ export class UserController {
     @Body() updateUserRequest: UpdateUserRequest,
   ): Promise<UserResponse> {
     const userDto = UserResponse.fromUserEntity(
-      await this.userService.updateUser(id, updateUserRequest),
+      await atomic(
+        this.connection,
+        this.userService.updateUser,
+        id,
+        updateUserRequest,
+      ),
     );
     return userDto;
   }
@@ -79,7 +94,7 @@ export class UserController {
    * delete a user by id
    */
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<string> {
-    return this.userService.deleteUser(id);
+  async delete(@Param('id') id: number): Promise<number> {
+    return atomic(this.connection, this.userService.deleteUser, id);
   }
 }
