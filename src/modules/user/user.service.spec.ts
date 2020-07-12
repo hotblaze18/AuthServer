@@ -66,7 +66,7 @@ describe('UserService', () => {
   it('createUser_returnCreatedUser', async () => {
     const expectedUser: User = Builder(User)
       .email('user1@x.com')
-      .id(expect.any(Number))
+      .id(expect.any(String))
       .firstName('user1')
       .lastName('last1')
       .password(expect.any(String))

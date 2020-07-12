@@ -5,7 +5,7 @@ import { User } from 'src/entities/user.entity';
  */
 export class UserResponse {
   constructor(
-    id: number,
+    id: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -45,7 +45,7 @@ export class UserResponse {
     return userDtoList;
   }
 
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

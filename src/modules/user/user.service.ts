@@ -35,7 +35,7 @@ export class UserService {
   /**
    * get user by id or throw EntityNotFoundError
    */
-  async getUserById(transactionRunner: QueryRunner, id: number): Promise<User> {
+  async getUserById(transactionRunner: QueryRunner, id: string): Promise<User> {
     return transactionRunner.manager.findOneOrFail(User, id);
   }
 
@@ -47,7 +47,7 @@ export class UserService {
    */
   async updateUser(
     transactionRunner: QueryRunner,
-    id: number,
+    id: string,
     updateUserRequest: UpdateUserRequest,
   ): Promise<User> {
     const updateResult = await transactionRunner.manager
@@ -74,8 +74,8 @@ export class UserService {
    */
   async deleteUser(
     transactionRunner: QueryRunner,
-    id: number,
-  ): Promise<number> {
+    id: string,
+  ): Promise<string> {
     const updateResult = await transactionRunner.manager
       .createQueryBuilder()
       .update(User)

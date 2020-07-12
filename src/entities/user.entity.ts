@@ -27,8 +27,8 @@ export class User {
     this.lastUpdatedBy = lastUpdatedBy;
   }
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   firstName: string;
