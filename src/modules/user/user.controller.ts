@@ -94,7 +94,7 @@ export class UserController {
    * delete a user by id
    */
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<number> {
+  async delete(@Param('id') id: string): Promise<string> {
     return atomic(this.connection, this.userService.deleteUser, id);
   }
 }
