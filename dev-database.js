@@ -1,6 +1,12 @@
 
 const Docker = require('dockerode');
-const docker = new Docker({socketPath: '/var/run/docker.sock'});
+const isWin = process.platform === 'win32';
+let docker;
+if(isWin) {
+docker = new Docker({socketPath: '//./pipe/docker_engine'});
+} else {
+docker = new Docker({socketPath: '/var/run/docker.sock'});
+}
 
 // Postgres image must be made available before the script
 docker.createContainer({

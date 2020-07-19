@@ -1,40 +1,21 @@
 import { User } from 'src/entities/user.entity';
+import { Builder } from 'builder-pattern';
 
 /**
  * UserResponse is a mimic of User Entity to be passed as response.
  */
 export class UserResponse {
-  constructor(
-    id: number,
-    firstName: string,
-    lastName: string,
-    email: string,
-    lastUpdatedBy: string,
-    createdAt: Date,
-    updatedAt: Date,
-    deletedAt: Date,
-  ) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.lastUpdatedBy = lastUpdatedBy;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-    this.deletedAt = deletedAt;
-  }
-
   static fromUserEntity(user: User) {
-    return new UserResponse(
-      user.id,
-      user.firstName,
-      user.lastName,
-      user.email,
-      user.lastUpdatedBy,
-      user.createdAt,
-      user.updatedAt,
-      user.deletedAt,
-    );
+    return Builder(UserResponse)
+      .id(user.id)
+      .firstName(user.firstName)
+      .lastName(user.lastName)
+      .email(user.email)
+      .lastUpdatedBy(user.lastUpdatedBy)
+      .createdAt(user.createdAt)
+      .updatedAt(user.updatedAt)
+      .deletedAt(user.deletedAt)
+      .build();
   }
 
   static fromUserEntityList(userList: User[]) {
@@ -45,7 +26,7 @@ export class UserResponse {
     return userDtoList;
   }
 
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

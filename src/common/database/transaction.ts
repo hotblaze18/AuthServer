@@ -12,11 +12,11 @@ export async function atomic(
 
   let result: any;
   try {
-    result = await task(queryRunner, args);
+    result = await task(queryRunner, ...args);
     await queryRunner.commitTransaction();
   } catch (error) {
     await queryRunner.rollbackTransaction();
-    this(error);
+    throw error;
   }
 
   return result;

@@ -5,6 +5,7 @@ import { QueryRunner } from 'typeorm';
 import { hash } from 'bcrypt';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { Builder } from 'builder-pattern';
 
 /**
  * // TODO(m-nikhil): update lastUpdatedBy to actual user, after login is done.
@@ -20,13 +21,14 @@ export class UserService {
     transactionRunner: QueryRunner,
     createUserRequest: CreateUserRequest,
   ): Promise<User> {
-    const user = new User(
-      createUserRequest.firstName,
-      createUserRequest.lastName,
-      createUserRequest.email,
-      await hash(createUserRequest.password, 10),
-      'curr_user',
-    );
+    const user = Builder(User)
+      .email(createUserRequest.email)
+      .firstName(createUserRequest.firstName)
+      .lastName(createUserRequest.lastName)
+      .password(await hash(createUserRequest.password, 10))
+      .lastUpdatedBy('curr_user')
+      .build();
+
     return transactionRunner.manager.save(user).catch(() => {
       throw new BadRequestException('User already exist');
     });
@@ -35,7 +37,7 @@ export class UserService {
   /**
    * get user by id or throw EntityNotFoundError
    */
-  async getUserById(transactionRunner: QueryRunner, id: number): Promise<User> {
+  async getUserById(transactionRunner: QueryRunner, id: string): Promise<User> {
     return transactionRunner.manager.findOneOrFail(User, id);
   }
 
@@ -57,7 +59,7 @@ export class UserService {
    */
   async updateUser(
     transactionRunner: QueryRunner,
-    id: number,
+    id: string,
     updateUserRequest: UpdateUserRequest,
   ): Promise<User> {
     const updateResult = await transactionRunner.manager
@@ -84,8 +86,8 @@ export class UserService {
    */
   async deleteUser(
     transactionRunner: QueryRunner,
-    id: number,
-  ): Promise<number> {
+    id: string,
+  ): Promise<string> {
     const updateResult = await transactionRunner.manager
       .createQueryBuilder()
       .update(User)
