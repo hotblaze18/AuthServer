@@ -96,22 +96,6 @@ describe('UserService', () => {
     expect(resultedUser).toEqual(expectedUser);
   });
 
-  it('createUser_wrongConfirmPassword_throwBadRequestException', async () => {
-    const createUserRequest: CreateUserRequest = Builder(CreateUserRequest)
-      .email('user1@x.com')
-      .firstName('user1')
-      .lastName('last1')
-      .password('password')
-      .confirmPassword('wrongpass')
-      .build();
-
-    const functionUnderTest = () =>
-      service.createUser(transactionRunner, createUserRequest);
-
-    await expect(functionUnderTest).rejects.toThrow(BadRequestException);
-    await expect(functionUnderTest).rejects.toThrowError('Password mismatch');
-  });
-
   it('createUser_userAlreadyExists_throwBadRequestException', async () => {
     const userToUpdate: User = Builder(User)
       .email('user1@x.com')

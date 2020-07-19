@@ -21,9 +21,6 @@ export class UserService {
     transactionRunner: QueryRunner,
     createUserRequest: CreateUserRequest,
   ): Promise<User> {
-    if (createUserRequest.password != createUserRequest.confirmPassword) {
-      throw new BadRequestException('Password mismatch');
-    }
     const user = Builder(User)
       .email(createUserRequest.email)
       .firstName(createUserRequest.firstName)
