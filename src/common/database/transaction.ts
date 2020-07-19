@@ -3,7 +3,7 @@ import { QueryRunner, Connection } from 'typeorm';
 export async function atomic(
   connection: Connection,
   task: Function,
-  ...args: any[]
+  ...args: any
 ) {
   const queryRunner: QueryRunner = connection.createQueryRunner();
 
@@ -16,7 +16,7 @@ export async function atomic(
     await queryRunner.commitTransaction();
   } catch (error) {
     await queryRunner.rollbackTransaction();
-    this(error);
+    throw error;
   }
 
   return result;
