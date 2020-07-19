@@ -5,6 +5,7 @@ import { QueryRunner } from 'typeorm';
 import { hash } from 'bcrypt';
 import { UpdateUserRequest } from './dto/request/updateUser.dto';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { Builder } from 'builder-pattern';
 
 /**
  * // TODO(m-nikhil): update lastUpdatedBy to actual user, after login is done.
@@ -23,13 +24,14 @@ export class UserService {
     if (createUserRequest.password != createUserRequest.confirmPassword) {
       throw new BadRequestException('Password mismatch');
     }
-    const user = new User(
-      createUserRequest.firstName,
-      createUserRequest.lastName,
-      createUserRequest.email,
-      await hash(createUserRequest.password, 10),
-      'curr_user',
-    );
+    const user = Builder(User)
+      .email(createUserRequest.email)
+      .firstName(createUserRequest.firstName)
+      .lastName(createUserRequest.lastName)
+      .password(await hash(createUserRequest.password, 10))
+      .lastUpdatedBy('curr_user')
+      .build();
+
     return transactionRunner.manager.save(user).catch(() => {
       throw new BadRequestException('User already exist');
     });
