@@ -8,6 +8,8 @@ import {
   Index,
 } from 'typeorm';
 
+import { compare } from 'bcrypt';
+
 /**
  * Represents the users who access the application
  */
@@ -54,4 +56,8 @@ export class User {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
+
+  async validatePassowrd(plaintextPassword) {
+    return await compare(plaintextPassword, this.password);
+  }
 }

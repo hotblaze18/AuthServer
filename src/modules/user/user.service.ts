@@ -40,6 +40,16 @@ export class UserService {
   }
 
   /**
+   * get user by email or throw EntityNotFoundError
+   */
+  async getUserByEmail(
+    transactionRunner: QueryRunner,
+    email: string,
+  ): Promise<User> {
+    return transactionRunner.manager.findOneOrFail(User, email);
+  }
+
+  /**
    * update user by id and if deletedAt is null (to ensure user is not soft deleted),
    * else throw `EntityNotFoundError`.
    *
@@ -100,5 +110,9 @@ export class UserService {
    */
   async queryUser(transactionRunner: QueryRunner): Promise<User[]> {
     return transactionRunner.manager.find(User);
+  }
+
+  async validatePassword(user: User, password: string): Promise<boolean> {
+    return user.validatePassowrd(password);
   }
 }
