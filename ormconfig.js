@@ -5,7 +5,7 @@ module.exports = [
     host: 'localhost',
     port: 5432,
     username: 'postgres',
-    password: 'mysecretpassword', //mysecretpassword
+    password: 'pranav2000', //mysecretpassword
     database: 'authserver',
     entities: ['dist/**/*.entity.js'],
     synchronize: true,

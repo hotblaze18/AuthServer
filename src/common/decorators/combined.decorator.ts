@@ -43,6 +43,6 @@ export function Password() {
 export function Email() {
   return applyDecorators(
     IsEmail(),
-    Transform((str: string) => str.toLowerCase()),
+    Transform((str: string) => String(str).toLowerCase()),
   );
 }
